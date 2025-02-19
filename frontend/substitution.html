@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CasparCG Substitution Caption</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+      .caption {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 10px;
+        display: none;
+        animation: fadeIn 1s ease-in-out;
+      }
+      .player {
+        font-size: 20px;
+      }
+      .time {
+        font-size: 16px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="caption" class="caption">
+      <div class="player" id="playerOut"></div>
+      <div class="player" id="playerIn"></div>
+      <div class="time" id="subTime"></div>
+    </div>
+
+    <script>
+      function updateCaption(playerOut, playerIn, time) {
+        document.getElementById(
+          "playerOut"
+        ).textContent = `Out: ${playerOut.name} (#${playerOut.number})`;
+        document.getElementById(
+          "playerIn"
+        ).textContent = `In: ${playerIn.name} (#${playerIn.number})`;
+        document.getElementById("subTime").textContent = `Time: ${time}`;
+
+        document.getElementById("caption").style.display = "block";
+
+        setTimeout(() => {
+          document.getElementById("caption").style.display = "none";
+        }, 5000);
+      }
+
+      const ws = new WebSocket("ws://localhost:4000");
+
+      ws.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        // Send data to CasparCG
+        const casparData = JSON.stringify({
+          playerOut: data.playerOut,
+          playerIn: data.playerIn,
+          time: data.time,
+        });
+
+        fetch("http://localhost:5250", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: casparData,
+        });
+
+        updateCaption(data.playerOut, data.playerIn, data.time);
+      };
+    </script>
+  </body>
+</html>

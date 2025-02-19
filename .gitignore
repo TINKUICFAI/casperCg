@@ -1,0 +1,31 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# Environment Variables
+.env
+
+# Logs
+logs/
+*.log
+log/
+debug.log
+error.log
+
+# MongoDB data
+/data/db/
+*.lock
+
+# CasparCG Temporary & Logs
+C:\CasparCG\Server\log/
+C:\CasparCG\Server\media/
+C:\CasparCG\Server\data/
+C:\CasparCG\Server\thumbnail/
+
+# MacOS System Files
+.DS_Store
+
+# Windows System Files
+Thumbs.db
+ehthumbs.db
